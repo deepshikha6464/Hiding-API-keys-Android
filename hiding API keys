@@ -1,0 +1,54 @@
+Hiding API keys in local.properties
+
+1. Make sure your build directory is gitignored. 
+It should be, by default, in a new Android Studio project
+-- you can double check by making sure that your .gitignore file contains the line:
+
+/build
+
+2.In your project root directory, add the API key to local.properties file like this:
+apiKey="hgjfkhg5764317698315768549027nfdsngadf"
+Where hgjfkhg5764317698315768549027nfdsngadf would be your API key.
+
+3. Add the following lines at the root level of your app-level build.gradle file:
+def localPropertiesFile = rootProject.file("local.properties")
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(localPropertiesFile))
+
+
+4.Pull the API into your project as a build config value by adding the 
+following line to your app level build.gradle file in the android { defaultConfig { } } block:
+
+def localPropertiesFile = rootProject.file("local.properties")
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(localPropertiesFile))
+
+
+android {
+    // ...
+    
+    defaultConfig {
+        // ...
+        buildConfigField "String", "API_KEY", localProperties['apiKey']
+
+    }
+    
+    // ...
+    
+}
+
+5.Sync Gradle and build the project. 
+You can now access the key in your Java code with BuildConfig.API_KEY, for example:
+String myApiKey = BuildConfig.API_KEY;
+
+
+
+
+
+6.You can add as many secret values as you'd like to your local.properties by following these steps.
+Give each one a unique reference, i.e. myApiKey2, BuildConfig.API_KEY_2
+
+
+
+
+
